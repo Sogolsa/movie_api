@@ -15,7 +15,91 @@
         It allows users to search for movies, get details about specific movies, and more.
         This document aims to guide developers on how to use the API endpoints efficiently.
     </p>
-
+    <h2> API ENDPOINT DOCUMENTATION</h2>
+    <table cellspacing="15">
+        <tr>
+            <th>List Number</th>
+            <th>Request Method/CRUD</th>
+            <th>URL Endpoint</th>
+            <th>Request</th>
+            <th>Response</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>GET/READ</td>
+            <td>/movies</td>
+            <td>Return a list of all movies to the users.</td>
+            <td>A JSON object holding data
+                about all the movies.
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>GET/READ</td>
+            <td>/movies/:title</td>
+            <td>Return data about a single movie by title to the user.</td>
+            <td>A JSON object holding the data about a single movie by title, or
+                a text that shows the movie doesn't exist.
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>GET/READ</td>
+            <td>/movies/genre/:genreName</td>
+            <td>Return data about a genre by name title.</td>
+            <td>A JSON object holding the data about the genre, or
+                a text that shows the genre doesn't exist.
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>GET/READ</td>
+            <td>/movies/director/:directorName</td>
+            <td>Return data about a director by name.</td>
+            <td>A JSON object holding the movie by director name, or
+                a text that shows the director doesn't exist.
+            </td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>POST/CREATE</td>
+            <td>/users</td>
+            <td>Allow new users to register.</td>
+            <td>A JSON object holding data about new user, or a 
+                text that shows user needs a name.
+            </td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>PUT/UPDATE</td>
+            <td>/users/:id</td>
+            <td>Allow new users to update their user's info, specially username.</td>
+            <td>A JSON object with updated user name, or a text that
+                shows "no such user!".
+            </td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>POST/CREATE</td>
+            <td>/users/:id/:movieTitle</td>
+            <td>Allow users to add a movie to their list of favorites.</td>
+            <td>A text that a movie has been added.</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>PUT/UPDATE</td>
+            <td>/users/:id/:movieTitle</td>
+            <td>Allow users to remove a movie from their list of favorites.</td>
+            <td>A text that a movie has been removed.</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>PUT/UPDATE</td>
+            <td>/users/:id</td>
+            <td>Allow existing users to deregister.</td>
+            <td>A text that a user email has been removed.</td>
+        </tr>
+    </table>
 </body>
 
 </html>
