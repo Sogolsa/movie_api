@@ -27,6 +27,13 @@
         <tr>
             <td>1</td>
             <td>GET/READ</td>
+            <td>/</td>
+            <td>Return a welcome message.</td>
+            <td>A default text</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>GET/READ</td>
             <td>/movies</td>
             <td>Return a list of all movies to the users.</td>
             <td>A JSON object holding data
@@ -34,7 +41,7 @@
             </td>
         </tr>
         <tr>
-            <td>2</td>
+            <td>3</td>
             <td>GET/READ</td>
             <td>/movies/:title</td>
             <td>Return data about a single movie by title to the user.</td>
@@ -43,16 +50,16 @@
             </td>
         </tr>
         <tr>
-            <td>3</td>
+            <td>4</td>
             <td>GET/READ</td>
-            <td>/movies/genre/:genreName</td>
+            <td>/movies/genres/:genreName</td>
             <td>Return data about a genre by name title.</td>
             <td>A JSON object holding the data about the genre, or
                 a text that shows the genre doesn't exist.
             </td>
         </tr>
         <tr>
-            <td>4</td>
+            <td>5</td>
             <td>GET/READ</td>
             <td>/movies/director/:directorName</td>
             <td>Return data about a director by name.</td>
@@ -61,7 +68,7 @@
             </td>
         </tr>
         <tr>
-            <td>5</td>
+            <td>6</td>
             <td>POST/CREATE</td>
             <td>/users</td>
             <td>Allow new users to register.</td>
@@ -70,32 +77,32 @@
             </td>
         </tr>
         <tr>
-            <td>6</td>
+            <td>7</td>
             <td>PUT/UPDATE</td>
-            <td>/users/:id</td>
+            <td>/users/:Name</td>
             <td>Allow new users to update their user's info, specially username.</td>
             <td>A JSON object with updated user name, or a text that
                 shows "no such user!".
             </td>
         </tr>
         <tr>
-            <td>7</td>
+            <td>8</td>
             <td>POST/CREATE</td>
-            <td>/users/:id/:movieTitle</td>
+            <td>/users/:Name/movies/:MovieID</td>
             <td>Allow users to add a movie to their list of favorites.</td>
             <td>A text that a movie has been added.</td>
         </tr>
         <tr>
-            <td>8</td>
+            <td>9</td>
             <td>PUT/UPDATE</td>
-            <td>/users/:id/:movieTitle</td>
+            <td>/users/:Name/Movies/:MovieID</td>
             <td>Allow users to remove a movie from their list of favorites.</td>
             <td>A text that a movie has been removed.</td>
         </tr>
         <tr>
-            <td>9</td>
+            <td>10</td>
             <td>PUT/UPDATE</td>
-            <td>/users/:id</td>
+            <td>/users/:Name</td>
             <td>Allow existing users to deregister.</td>
             <td>A text that a user email has been removed.</td>
         </tr>
