@@ -51,7 +51,7 @@ passport.use(
       /*Secret key to verify the signature of the JWT, this signature verifies
             that the sender of the JWT is who says it is and also that JWT hasn't 
             been altered.*/
-      secretOrKey: 'your-jwt-passport',
+      secretOrKey: '28EDFAB6C466FEE32240574F22BAEC35D07FABD15C32DB3B4AC58EE07DAF1433',
     },
     async (jwtPayload, callback) => {
       return await Users.findById(jwtPayload._id)

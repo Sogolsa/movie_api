@@ -1,6 +1,6 @@
 /*Authenticate login requests using basic HTTP authentication 
 and generate a JWT for the user.*/
-const jwtSecret = 'your-jwt-secret';
+const jwtSecret = '28EDFAB6C466FEE32240574F22BAEC35D07FABD15C32DB3B4AC58EE07DAF1433';
 const jwt = require('jsonwebtoken'),
   passport = require('passport');
 
