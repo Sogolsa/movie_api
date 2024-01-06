@@ -7,9 +7,11 @@ const jwt = require('jsonwebtoken'),
 // Local passport file
 require('./passport');
 
-/*Create a JWT based on the username and password and then
- send back as a response to the client, if the username and password doesn't
- exist, return the error message received from the LocalStrategy back to the client.*/
+/********************************************************************
+Create a JWT based on the username and password and then send back
+ as a response to the client, if the username and password doesn't
+exist, return the error message received from the LocalStrategy back
+ to the client.******************************************************/
 let generateJWTToken = (user) => {
   return jwt.sign(user, jwtSecret, {
     subject: user.Name, //username encoded in the JWT

@@ -1,24 +1,16 @@
 /* Importing mongoose and models.js, and integrating models 
 with the rest of the application */
-const express = require('express'),
-  bodyParser = require('body-parser');
-(morgan = require('morgan')),
-  // Importing built in node modules fs and path//
-  (fs = require('fs')),
-  (path = require('path'));
+const express = require('express'); //Creating web application
+const bodyParser = require('body-parser'); // For parsing the bodies of HTTP request
+const morgan = require('morgan'); //logging middleware that generates server request logs
+const fs = require('fs'); // built-in node modules
+const path = require('path'); // built-in node modules
+const uuid = require('uuid'); // Generating unique identifiers
+const mongoose = require('mongoose'); // For interacting with mongoDB
+const Models = require('./models.js'); //Importing custom data models
 
-// Generating unique identifiers
-uuid = require('uuid');
-
-// For interacting with mongoDB
-mongoose = require('mongoose');
-
-//Importing custom data models
-Models = require('./models.js');
-
-// Get data models from model.js file
-const Movies = Models.Movie;
-const Users = Models.User;
+const Movies = Models.Movie; // Get data models from model.js file
+const Users = Models.User; 
 
 mongoose.connect('mongodb://localhost:27017/cfMovieDB', {
   useNewUrlParser: true,
@@ -28,6 +20,25 @@ mongoose.connect('mongodb://localhost:27017/cfMovieDB', {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+/**********************************************************************
+ Cross-origin resource sharing, for restricting and allowing access from
+ different origins to the API.
+CORS allows you to control which domains have access to the API's server,
+and to keep it protected from malicious entities.************************/
+const cors = require('cors');
+
+// Allowing all the domains make request to the API
+app.use(cors());
+
+
+//Server-side input validation for the app
+/*************************************************************************
+ validating inputs, acting as a security measure and preventing
+ bugs to minimize the risk of those inputs containing malicious scripts.
+ And ensuring only only expected types of data within the database will be
+  stored.*****************************************************************/
+const { check, validationResult } = require('express-validator');
 
 /* Importing auth.js file into the project, ensuring that
 Express is available in auth.js */
@@ -51,20 +62,41 @@ app.get('/', (req, res) => {
 });
 
 // CREATE, add a user //
-/*Check if the user with the name provided by the client already exists,
+/***************************************************************************
+Check if the user with the name provided by the client already exists,
 if the user exists then send back the appropriate message,
-if the user doesn't exist, create the new user with mongoose CREATE command.*/
+if the user doesn't exist, create the new user with mongoose CREATE command.
+*****************************************************************************/
 app.post(
   '/users',
+  [
+    // Validation logic
+    check('Name', 'Name is required').isLength({ min: 4 }), //Minimum value of 5 character only is allowed
+    check(
+      'Name',
+      'Name contains non alphanumeric characters-not allowed.'
+    ).isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(), // Is not empty
+    check('Email', 'Email does not appear to be valid.').isEmail(),
+  ],
   async (req, res) => {
+    // Check the validation object for errors
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    // Search to see if a user with the requested Name already exists
     await Users.findOne({ Name: req.body.Name })
       .then((user) => {
         if (user) {
+          //If the user is found, send a response that it already exists
           return res.status(400).send(req.body.Name + 'already exists');
         } else {
           Users.create({
             Name: req.body.Name,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday,
           })
@@ -88,8 +120,23 @@ app.post(
 app.put(
   '/users/:Name',
   passport.authenticate('jwt', { session: false }),
+  [
+    // Validation logic
+    check(
+      'Name',
+      'Name contains non alphanumeric characters-not allowed.'
+    ).isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(), 
+    check('Email', 'Email does not appear to be valid.').isEmail(),
+  ],
   async (req, res) => {
-    if(req.user.Name !== req.params.Name){
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    if (req.user.Name !== req.params.Name) {
       return res.status(400).send('Permission denied');
     }
     await Users.findOneAndUpdate(
@@ -99,7 +146,7 @@ app.put(
       {
         $set: {
           Name: req.body.Name,
-          Password: req.body.Password,
+          Password: hashedPassword,
           Email: req.body.Email,
           Birthday: req.body.Birthday,
         },
@@ -127,7 +174,7 @@ app.post(
       },
       {
         $push: {
-          favoriteMovies: req.params.MovieID,
+          FavoriteMovies: req.params.MovieID,
         },
       },
       { new: true }
@@ -147,13 +194,13 @@ app.delete(
   '/users/:Name/movies/:MovieID',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    await Users.findOneAndDelete(
+    await Users.findOneAndUpdate(
       {
         Name: req.params.Name,
       },
       {
         $pull: {
-          favoriteMovies: req.params.MovieID,
+          FavoriteMovies: req.params.MovieID,
         },
       },
       { new: true }
@@ -169,9 +216,10 @@ app.delete(
 );
 
 // DELETE, allow users to deregister
-/*Get the user's name from the endpoint, pass it through the req.params, check if the user exists,
-if the user exists delete it, and if doesn't exist send a text the user was not
-found.*/
+/**********************************************************************
+Get the user's name from the endpoint, pass it through the req.params,
+check if the user exists, if the user exists delete it, and if doesn't
+exist send a text the user was not found.******************************/
 app.delete(
   '/users/:Name',
   passport.authenticate('jwt', { session: false }),
@@ -199,6 +247,36 @@ app.get(
     await Movies.find()
       .then((movies) => {
         res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
+
+app.get(
+  '/users',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    await Users.find()
+      .then((users) => {
+        res.status(201).json(users);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+      });
+  }
+);
+
+app.get(
+  '/users/:Name',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    await Users.findOne({Name: req.params.Name})
+      .then((users) => {
+        res.status(201).json(users);
       })
       .catch((err) => {
         console.error(err);
@@ -258,14 +336,16 @@ app.get(
   }
 );
 
-/*Error handling middleware, to catch errors during the processing of
-a request. Information about the current error will be logged to the terminal
-using err.stack. This middleware should be last defined, but before the
-app.listen(). */
+/*******************************************************************
+Error handling middleware, to catch errors during the processing of
+a request. Information about the current error will be logged to the
+terminal using err.stack. This middleware should be last defined, but
+before the app.listen().**********************************************/
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+
 
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
