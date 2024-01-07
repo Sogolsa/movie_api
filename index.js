@@ -12,7 +12,12 @@ const Models = require('./models.js'); //Importing custom data models
 const Movies = Models.Movie; // Get data models from model.js file
 const Users = Models.User; 
 
-mongoose.connect('mongodb://localhost:27017/cfMovieDB', {
+// mongoose.connect('mongodb://localhost:27017/cfMovieDB', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+mongoose.connect('process.env.CONNECTION_URI', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
