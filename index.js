@@ -346,7 +346,9 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-
-app.listen(8080, () => {
-  console.log('Your app is listening on port 8080.');
-});
+/* process.env.PORT looks for a pre-configured port number in the environment
+ variable, and, if nothing is found, sets the port to a certain port number */
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on port' + port);
+})
