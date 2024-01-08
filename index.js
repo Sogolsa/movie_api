@@ -10,14 +10,14 @@ const mongoose = require('mongoose'); // For interacting with mongoDB
 const Models = require('./models.js'); //Importing custom data models
 
 const Movies = Models.Movie; // Get data models from model.js file
-const Users = Models.User; 
+const Users = Models.User;
 
 // mongoose.connect('mongodb://localhost:27017/cfMovieDB', {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
 // });
 
-mongoose.connect('process.env.CONNECTION_URI', {
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -35,7 +35,6 @@ const cors = require('cors');
 
 // Allowing all the domains make request to the API
 app.use(cors());
-
 
 //Server-side input validation for the app
 /*************************************************************************
@@ -131,7 +130,7 @@ app.put(
       'Name',
       'Name contains non alphanumeric characters-not allowed.'
     ).isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(), 
+    check('Password', 'Password is required').not().isEmpty(),
     check('Email', 'Email does not appear to be valid.').isEmail(),
   ],
   async (req, res) => {
@@ -279,7 +278,7 @@ app.get(
   '/users/:Name',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    await Users.findOne({Name: req.params.Name})
+    await Users.findOne({ Name: req.params.Name })
       .then((users) => {
         res.status(201).json(users);
       })
@@ -356,4 +355,4 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
   console.log('Listening on port' + port);
-})
+});
