@@ -17,6 +17,7 @@ const Users = Models.User;
 //   useUnifiedTopology: true,
 // });
 
+require('dotenv').config();
 mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
