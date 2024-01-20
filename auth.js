@@ -1,6 +1,6 @@
 /*Authenticate login requests using basic HTTP authentication 
 and generate a JWT for the user.*/
-const jwtSecret = '28EDFAB6C466FEE32240574F22BAEC35D07FABD15C32DB3B4AC58EE07DAF1433';
+const jwtSecret = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken'),
   passport = require('passport');
 
@@ -32,7 +32,7 @@ module.exports = (router) => {
       }
       req.login(user, { session: false }, (error) => {
         if (error) {
-          res.send(error);
+          return res.status(400).json('login error ' + error);
         }
         let token = generateJWTToken(user.toJSON());
         return res.json({ user, token });
