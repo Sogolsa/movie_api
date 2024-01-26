@@ -1,6 +1,3 @@
-const passport = require('passport');
-const Movies = require('./models.js');
-
 module.exports = function (app) {
   // READ, return JSON object of all movies when at /movies
   app.get('/movies', async (req, res) => {
