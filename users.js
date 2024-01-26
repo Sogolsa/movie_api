@@ -159,6 +159,9 @@ if the user doesn't exist, create the new user with mongoose CREATE command.
     }
   );
 
+  const passport = require('passport');
+  const Users = require('./models.js'); // Make sure to import your Movies model or schema
+
   // DELETE, allowing users to remove a movie from their list of favorites
   app.delete(
     '/users/:Name/movies/:MovieID',
