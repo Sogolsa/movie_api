@@ -1,3 +1,7 @@
+const passport = require('passport');
+const Models = require('./models.js');
+const Users = Models.User;
+
 module.exports = function (app) {
   //Get all the users
   app.get(
