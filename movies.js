@@ -1,22 +1,18 @@
-module.exports = function(app) {
-    // READ, return JSON object of all movies when at /movies
-app.get(
-    '/movies',
-    passport.authenticate('jwt', { session: false }),
-    async (req, res) => {
-      await Movies.find()
-        .then((movies) => {
-          res.status(201).json(movies);
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).send('Unable to retrieve movies: ' + err);
-        });
-    }
-  );
+module.exports = function (app) {
+  // READ, return JSON object of all movies when at /movies
+  app.get('/movies', async (req, res) => {
+    await Movies.find()
+      .then((movies) => {
+        res.status(201).json(movies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send('Unable to retrieve movies: ' + err);
+      });
+  });
 
   // // READ, returning a JSON movie info when looking for specific title //
-app.get(
+  app.get(
     '/movies/:title',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
@@ -32,7 +28,7 @@ app.get(
   );
 
   // READ, Get JSON genre info when looking for specific genre //
-app.get(
+  app.get(
     '/movies/genres/:genreName',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
@@ -50,7 +46,7 @@ app.get(
   );
 
   // READ, Get info on director when looking for a specific director by name.
-app.get(
+  app.get(
     '/movies/director/:directorName',
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
@@ -66,5 +62,4 @@ app.get(
         });
     }
   );
-  
-}
+};
