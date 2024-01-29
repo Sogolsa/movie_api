@@ -1,5 +1,7 @@
 const passport = require('passport');
 const Models = require('./models.js');
+const express = require('express');
+const app = express();
 let auth = require('./auth')(app);
 
 const Movies = Models.Movie;
