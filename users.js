@@ -8,8 +8,14 @@ const { check, validationResult } = require('express-validator');
 
 const Users = Models.User;
 
+//Get all the users
+/**
+ * Get a list of all users
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @returns {object[]} a JSON object of all users
+ */
 module.exports = function (app) {
-  //Get all the users
   app.get(
     '/users',
     passport.authenticate('jwt', { session: false }),
@@ -25,7 +31,12 @@ module.exports = function (app) {
     }
   );
 
-  //Get the users by name
+  /**
+   * Get the users by name
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {object} a JSON object of data about a user by name
+   */
   app.get(
     '/users/:Name',
     passport.authenticate('jwt', { session: false }),
@@ -41,12 +52,14 @@ module.exports = function (app) {
     }
   );
 
-  // CREATE, add a user //
-  /***************************************************************************
-Check if the user with the name provided by the client already exists,
-if the user exists then send back the appropriate message,
-if the user doesn't exist, create the new user with mongoose CREATE command.
-*****************************************************************************/
+  /**
+   * Check if the user with the name provided by the client already exists,
+   * if the user exists then send back the appropriate message,
+   * if the user doesn't exist, create the new user with mongoose CREATE command.
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {object} a JSON object about the created new user
+   */
   app.post(
     '/users',
     [
@@ -96,7 +109,12 @@ if the user doesn't exist, create the new user with mongoose CREATE command.
     }
   );
 
-  // UPDATE, Allow users to update their users info
+  /**
+   * UPDATE, Allow users to update their users info
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {object} JSON object with updated user information
+   */
   app.put(
     '/users/:Name',
     passport.authenticate('jwt', { session: false }),
@@ -143,7 +161,12 @@ if the user doesn't exist, create the new user with mongoose CREATE command.
     }
   );
 
-  // CREATE, add a movie to user name's list
+  /**
+   * CREATE, add a movie to user name's list
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {string} a text that movie has been added
+   */
   app.post(
     '/users/:Name/movies/:MovieID',
     passport.authenticate('jwt', { session: false }),
@@ -169,7 +192,12 @@ if the user doesn't exist, create the new user with mongoose CREATE command.
     }
   );
 
-  // DELETE, allowing users to remove a movie from their list of favorites
+  /**
+   * DELETE, allowing users to remove a movie from their list of favorites
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {string} a text that movie has been removed
+   */
   app.delete(
     '/users/:Name/movies/:MovieID',
     passport.authenticate('jwt', { session: false }),
@@ -195,11 +223,15 @@ if the user doesn't exist, create the new user with mongoose CREATE command.
     }
   );
 
-  // DELETE, allow users to deregister
-  /**********************************************************************
-  Get the user's name from the endpoint, pass it through the req.params,
-  check if the user exists, if the user exists delete it, and if doesn't
-  exist send a text the user was not found.******************************/
+  /**
+   * DELETE, allow users to deregister
+   * Get the user's name from the endpoint, pass it through the req.params,
+   * check if the user exists, if the user exists delete it, and if doesn't
+   * exist send a text the user was not found.
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {string} a text that the user has been deleted
+   */
   app.delete(
     '/users/:Name',
     passport.authenticate('jwt', { session: false }),

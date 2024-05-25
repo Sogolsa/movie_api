@@ -6,8 +6,14 @@ let auth = require('./auth')(app);
 
 const Movies = Models.Movie;
 
+/**
+ * READ
+ * Get list of all movies
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
+ * @returns {object[]} a JSON object array of all movies
+ */
 module.exports = function (app) {
-  // READ, return JSON object of all movies when at /movies
   app.get(
     '/movies',
     passport.authenticate('jwt', { session: false }),
@@ -23,7 +29,13 @@ module.exports = function (app) {
     }
   );
 
-  // // READ, returning a JSON movie info when looking for specific title //
+  /**
+   * READ
+   * Get a movie by it's title
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {object} a JSON object about a movie info by title
+   */
   app.get(
     '/movies/:title',
     passport.authenticate('jwt', { session: false }),
@@ -39,7 +51,13 @@ module.exports = function (app) {
     }
   );
 
-  // READ, Get JSON genre info when looking for specific genre //
+  /**
+   * READ
+   * Get genre info from movies
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {object} a data object about a genre by name
+   */
   app.get(
     '/movies/genres/:genreName',
     passport.authenticate('jwt', { session: false }),
@@ -57,7 +75,13 @@ module.exports = function (app) {
     }
   );
 
-  // READ, Get info on director when looking for a specific director by name.
+  /**
+   * READ
+   * Get info on director by name
+   * @param {object} req - Express request object
+   * @param {object} res - Express response object
+   * @returns {object} a JSON object data about a director by name
+   */
   app.get(
     '/movies/director/:directorName',
     passport.authenticate('jwt', { session: false }),

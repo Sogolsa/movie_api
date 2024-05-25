@@ -4,11 +4,15 @@ const mongoose = require('mongoose');
 //Importing the bcrypt module
 const bcrypt = require('bcrypt');
 
-/************************************************************************* 
-Defining the schema for movie and user collections, in order to keep
-documents in both collections uniform, Title and Description are required
-in all movie documents, Name, Password and Email are required in all users
-documents.****************************************************************/
+/**
+ * Defining the schema for movie collections, in order to keep documents
+ * in collections uniform, and structured.
+ *  Title and Description are required in all movie documents,
+ * @typedef {object} movieSchema
+ * @property {string} Title
+ * @property {string} Description
+ * @property {string} ImagePath
+ */
 let movieSchema = mongoose.Schema({
   Title: { type: String, required: true },
   Description: { type: String, required: true },
@@ -25,6 +29,15 @@ let movieSchema = mongoose.Schema({
   Featured: Boolean,
 });
 
+/**
+ * Schema for users
+ * Name, Password and Email are required in all users documents.
+ * @typedef {object} userSchema
+ * @property {string} Name
+ * @property {string} Password
+ * @property {string} Email
+ * @property {Date} Birthday
+ */
 let userSchema = mongoose.Schema({
   Name: {
     type: String,
@@ -52,8 +65,12 @@ userSchema.statics.hashPassword = (password) => {
   return bcrypt.hashSync(password, 10);
 };
 
-/* Adding validatePassword to compare submitted hashed passwords
- with the hashed passwords stored in the database */
+/**
+ * Adding validatePassword to compare submitted hashed passwords
+ * with the hashed passwords stored in the database
+ * @param {string} password - hashed password
+ * @return {boolean} - true if they match
+ */
 userSchema.methods.validatePassword = function (password) {
   return bcrypt.compareSync(password, this.Password);
 };
